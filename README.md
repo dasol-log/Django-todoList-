@@ -166,3 +166,4 @@ python manage.py runserver
 ![delete](images/delete.png)
 
 ### 3️⃣ DRF ViewSets로 API 전환
+![viewsets](images/viewsets.png)
