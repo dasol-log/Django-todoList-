@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load static %}
 {% block content %}
 
 <div class="todoDetail">
@@ -14,60 +15,70 @@
   <button class="todoHome">홈으로</button>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script>
 document.addEventListener("DOMContentLoaded", () => {
-  // HTML 문서가 모두 로드된 후 실행
+  // HTML 문서가 모두 로드된 후 실행되는 코드
 
   const todoId = "{{ todo.id }}";
-  // Django 템플릿에서 전달된 todo의 id(pk)를 JS 변수에 저장
+  // Django 템플릿에서 전달된 todo의 id(pk)를 JavaScript 변수에 저장
 
-  // 기존 수정 버튼
+  // axios 인스턴스 생성
+  const api = axios.create({
+    baseURL: "/",
+    headers: {
+      "Content-Type": "application/json"
+    }
+  });
+
+  // CSRF 토큰 가져오는 함수
+  function getCookie(name) {
+    const value = document.cookie
+      .split("; ")
+      .find(row => row.startsWith(name + "="));
+    return value ? decodeURIComponent(value.split("=")[1]) : null;
+  }
+
+  const csrftoken = getCookie("csrftoken");
+  // csrftoken 쿠키에서 CSRF 토큰 추출
+
+  // axios 기본 헤더에 CSRF 토큰 설정
+  api.defaults.headers.common["X-CSRFToken"] = csrftoken;
+  api.defaults.headers.common["X-Requested-With"] = "XMLHttpRequest";
+  // Django는 DELETE / POST / PUT 요청 시 CSRF 토큰을 요구하기 때문에
+  // axios 요청 헤더에 X-CSRFToken을 추가해야 403 오류가 발생하지 않음
+
+  // 수정 버튼
   const updateBtn = document.querySelector(".todoUpdate");
-  // class가 todoUpdate인 버튼 선택
 
   updateBtn.addEventListener("click", () => {
-    // 수정 버튼 클릭 시 실행
     window.location.href = `/todo/update/${todoId}/`;
-    // 해당 todo의 수정 페이지로 이동
   });
 
   // 삭제 버튼
   const deleteBtn = document.querySelector(".todoDelete");
-  // class가 todoDelete인 버튼 선택
 
   deleteBtn.addEventListener("click", async () => {
-    // 삭제 버튼 클릭 시 실행
 
     const ok = confirm("정말 삭제하시겠습니까?");
-    // 사용자에게 삭제 여부 확인 창 표시
 
     if (!ok) return;
-    // 취소를 누르면 삭제 진행하지 않음
 
     try {
-      const csrfToken = document.cookie
-        .split("; ")
-        .find(row => row.startsWith("csrftoken"))
-        ?.split("=")[1];
-      // 쿠키에서 CSRF 토큰 추출
 
-      const res = await fetch(`/todo/api/delete/${todoId}/`, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-          "X-CSRFToken": csrfToken,
-        }
-      });
+      const res = await api.delete(`/todo/viewsets/view/${todoId}/`);
+      // axios를 사용하여 DELETE 요청 전송
+      // 기존 fetch DELETE 요청과 동일한 기능
 
-      if (!res.ok) throw new Error("삭제 실패");
-      // 응답이 정상적이지 않으면 에러 발생
+      console.log(res.data);
+      // 서버 응답 데이터 확인 (DELETE는 보통 데이터 없음)
 
-      // 삭제 성공 시 Todo 목록 페이지로 이동
+      // 삭제 성공 후 목록 페이지로 이동
       window.location.href = "/todo/list/";
 
     } catch (err) {
-      console.error(err);
-      // 오류 내용을 콘솔에 출력
+      console.error(err.response?.data || err.message);
+      // 삭제 중 오류 발생 시 콘솔 출력
 
       alert("삭제 중 오류가 발생했습니다.");
       // 사용자에게 오류 메시지 표시
@@ -88,5 +99,4 @@ document.addEventListener("DOMContentLoaded", () => {
 
 });
 </script>
-
 {% endblock %}
