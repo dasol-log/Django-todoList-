@@ -143,9 +143,16 @@ python manage.py runserver
 이 프로젝트는 단순 Todo 앱이 아닌
 "실무 확장형 Django → DRF → AI → 비동기 구조 학습 프로젝트"입니다.
 ```
-
+### 1️⃣ Django 기본 세팅
 ![page1](images/page1.png)
+
+### 2️⃣ Generic View 기반 CRUD
+![api_list](images/api_list.png)
 ![list](images/list.png)
+![api_create](images/api_create.png)
+![api_retrieve](images/api_retrieve.png)
 ![detail](images/detail.png)
+![api_update](images/api_update.png)
 ![update](images/update.png)
+![api_delete](images/api_delete.png)
 ![delete](images/delete.png)
