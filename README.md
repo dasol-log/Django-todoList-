@@ -180,6 +180,6 @@ python manage.py runserver
 
 ### 4️⃣ 환경 변수 설정 (.env)
 
-![.env 추가](images/.env 추가.png)
+![.env](images/.env.png)
 
 ### 5️⃣ Pagination 추가
