@@ -144,8 +144,8 @@ python manage.py runserver
 "실무 확장형 Django → DRF → AI → 비동기 구조 학습 프로젝트"입니다.
 ```
 
-!(images/page1.png)
-!(images/list.png)
-!(images/detail.png)
-!(images/update.png)
-!(images/delete.png)
+![page1](images/page1.png)
+![list](images/list.png)
+![detail](images/detail.png)
+![update](images/update.png)
+![delete](images/delete.png)
