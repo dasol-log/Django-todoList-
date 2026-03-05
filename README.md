@@ -144,4 +144,4 @@ python manage.py runserver
 
 "실무 확장형 Django → DRF → AI → 비동기 구조 학습 프로젝트"입니다.
 
-!https://github.com/dasol-log/Django-todoList-/blob/main/images/1%EB%8B%A8%EA%B3%84.png
+![메인화면](images/page1.png)
