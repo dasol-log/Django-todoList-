@@ -140,7 +140,8 @@ python manage.py runserver
 
 ## 🎯 프로젝트 성격
 
-이 프로젝트는 단순 Todo 앱이 아닌
+이 프로젝트는 단순 Todo 앱이 아닌<img width="1918" height="1017" alt="1단계" src="https://github.com/user-attachments/assets/0e5c8b9f-d8cc-48dd-911a-47f05ba6e29d" />
+
 "실무 확장형 Django → DRF → AI → 비동기 구조 학습 프로젝트"입니다.
 
-![메인화면](images/1단계.png)
+![Uploading 1단계.png…]()
