@@ -179,7 +179,7 @@ python manage.py runserver
 ![viewsets_delete2](images/viewsets_delete2.png)
 
 ### 4️⃣ 환경 변수 설정 (.env)
-
 ![.env](images/.env.png)
 
 ### 5️⃣ Pagination 추가
+![pagination](images/pagination.png)
