@@ -9,19 +9,13 @@ from collections import OrderedDict
 from django.conf import settings
 
 
-# ---------------------------------------------------------
 # 사용자 정의 페이지네이션 클래스
-# ---------------------------------------------------------
 class CustomPageNumberPagination(PageNumberPagination):
 
-    # 기본 페이지 사이즈 설정
     # settings.py의 REST_FRAMEWORK["PAGE_SIZE"] 값을 사용
-    # 값이 없으면 기본 10개
     default_page_size = settings.REST_FRAMEWORK.get("PAGE_SIZE", 10)
 
-    # ---------------------------------------------------------
     # 페이지네이션 적용 전 QuerySet 처리
-    # ---------------------------------------------------------
     def paginate_queryset(self, queryset, request, view=None):
 
         # URL 파라미터에서 page_size 값을 가져옴
@@ -34,7 +28,6 @@ class CustomPageNumberPagination(PageNumberPagination):
 
         else:
             try:
-                # page_size를 정수로 변환
                 self.page_size = int(page_size)
 
             except ValueError:
@@ -44,9 +37,7 @@ class CustomPageNumberPagination(PageNumberPagination):
         # DRF 기본 paginate_queryset 기능 실행
         return super().paginate_queryset(queryset, request, view)
 
-    # ---------------------------------------------------------
     # 페이지네이션 응답 구조 정의
-    # ---------------------------------------------------------
     def get_paginated_response(self, data):
 
         return Response(
