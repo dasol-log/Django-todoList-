@@ -1,0 +1,13 @@
+{% for todo in todos %}
+  <p>{{ todo.name }}</p>
+
+  {% if todo.description %}
+    <p>{{ todo.description }}</p>
+  {% else %}
+    <p>No description</p>
+  {% endif %}
+
+  <p>{{ todo.complete }}</p>
+  <p>{{ todo.created_at }}</p>
+  <hr>
+{% endfor %}
