@@ -148,11 +148,21 @@ python manage.py runserver
 
 ### 2️⃣ Generic View 기반 CRUD
 ![api_list](images/api_list.png)
+
 ![list](images/list.png)
+
 ![api_create](images/api_create.png)
+
 ![api_retrieve](images/api_retrieve.png)
+
 ![detail](images/detail.png)
+
 ![api_update](images/api_update.png)
+
 ![update](images/update.png)
+
 ![api_delete](images/api_delete.png)
+
 ![delete](images/delete.png)
+
+### 3️⃣ DRF ViewSets로 API 전환
