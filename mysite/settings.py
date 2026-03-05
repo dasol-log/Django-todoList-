@@ -14,7 +14,6 @@ from pathlib import Path
 import os
 import environ  # 환경변수 추가
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
@@ -131,7 +130,16 @@ STATICFILES_DIRS = [
 ]
 
 REST_FRAMEWORK = {
+    # 기본 권한
+    "DEFAULT_PERMISSION_CLASSES": [
+        "rest_framework.permissions.AllowAny",
+    ],
+    # 페이지네이션
+    "DEFAULT_PAGINATION_CLASS": "todo.pagination.CustomPageNumberPagination",
+    "PAGE_SIZE": 3,
+    # API 응답 형식
     "DEFAULT_RENDERER_CLASSES": [
         "rest_framework.renderers.JSONRenderer",
+        "rest_framework.renderers.BrowsableAPIRenderer",
     ],
 }

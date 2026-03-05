@@ -166,4 +166,20 @@ python manage.py runserver
 ![delete](images/delete.png)
 
 ### 3️⃣ DRF ViewSets로 API 전환
-![viewsets](images/viewsets.png)
+![viewsets_post](images/viewsets_post.png)
+
+![viewsets_get](images/viewsets_get.png)
+
+![viewsets_patch1](images/viewsets_patch1.png)
+
+![viewsets_patch2](images/viewsets_patch2.png)
+
+![viewsets_delete](images/viewsets_delete.png)
+
+![viewsets_delete2](images/viewsets_delete2.png)
+
+### 4️⃣ 환경 변수 설정 (.env)
+
+![.env 추가](images/.env 추가.png)
+
+### 5️⃣ Pagination 추가
