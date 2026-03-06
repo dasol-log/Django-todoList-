@@ -4,9 +4,7 @@ from rest_framework.test import APIClient
 from todo.models import Todo
 
 
-# ---------------------------------------------------------
 # ViewSet 기반 Todo CRUD API 테스트
-# ---------------------------------------------------------
 class TodoViewSetCRUDTests(TestCase):
     """
     ViewSet 라우팅 기반 API 테스트
@@ -18,9 +16,7 @@ class TodoViewSetCRUDTests(TestCase):
     destroy:  DELETE /todo/viewsets/view/<pk>/
     """
 
-    # ---------------------------------------------------------
     # 테스트 시작 전에 공통 데이터 준비
-    # ---------------------------------------------------------
     def setUp(self):
 
         self.client = APIClient()
@@ -38,9 +34,7 @@ class TodoViewSetCRUDTests(TestCase):
         )
         # 테스트용 기본 Todo 데이터 생성
 
-    # ---------------------------------------------------------
     # 목록 조회 테스트
-    # ---------------------------------------------------------
     def test_list(self):
 
         res = self.client.get(self.base_url)
@@ -49,8 +43,8 @@ class TodoViewSetCRUDTests(TestCase):
         self.assertEqual(res.status_code, 200)
         # 상태코드 200(성공)인지 확인
 
-        data = res.json()
-        # 응답 데이터를 JSON으로 변환
+        data = res.json()["data"]
+        # 페이지네이션 응답 구조: {"data": [...], "total_count": ..., ...}
 
         self.assertIsInstance(data, list)
         # 응답이 리스트 형태인지 확인
@@ -58,9 +52,7 @@ class TodoViewSetCRUDTests(TestCase):
         self.assertGreaterEqual(len(data), 1)
         # 최소 1개 이상의 데이터가 존재하는지 확인
 
-    # ---------------------------------------------------------
     # 생성 테스트
-    # ---------------------------------------------------------
     def test_create(self):
 
         payload = {
@@ -80,9 +72,7 @@ class TodoViewSetCRUDTests(TestCase):
         self.assertEqual(Todo.objects.count(), 2)
         # 기존 1개 + 새로 생성된 1개 = 총 2개인지 확인
 
-    # ---------------------------------------------------------
     # 상세 조회 테스트
-    # ---------------------------------------------------------
     def test_retrieve(self):
 
         res = self.client.get(f"{self.base_url}{self.todo.id}/")
@@ -94,9 +84,7 @@ class TodoViewSetCRUDTests(TestCase):
         self.assertEqual(res.json()["name"], "운동")
         # 반환된 데이터의 name 값 확인
 
-    # ---------------------------------------------------------
     # 부분 수정 테스트 (PATCH)
-    # ---------------------------------------------------------
     def test_partial_update_patch(self):
 
         payload = {"name": "운동(수정)"}
@@ -116,9 +104,7 @@ class TodoViewSetCRUDTests(TestCase):
         self.assertEqual(self.todo.name, "운동(수정)")
         # 실제 DB 값이 수정되었는지 확인
 
-    # ---------------------------------------------------------
     # 삭제 테스트
-    # ---------------------------------------------------------
     def test_destroy_delete(self):
 
         res = self.client.delete(f"{self.base_url}{self.todo.id}/")
@@ -130,9 +116,7 @@ class TodoViewSetCRUDTests(TestCase):
         self.assertFalse(Todo.objects.filter(id=self.todo.id).exists())
         # DB에 해당 데이터가 존재하지 않는지 확인
 
-    # ---------------------------------------------------------
     # 존재하지 않는 데이터 요청 테스트
-    # ---------------------------------------------------------
     def test_not_found_returns_404(self):
 
         res = self.client.get(f"{self.base_url}999999/")

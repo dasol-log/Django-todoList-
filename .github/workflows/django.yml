@@ -35,7 +35,7 @@ jobs:
         python manage.py showmigrations todo
         python manage.py shell -c "from django.conf import settings; print('DATABASES =', settings.DATABASES)"
       # 마이그레이션 상태와 DB 설정 정보 확인 (디버깅용)
-      
+
     - name: Run Tests
       run: |
         python manage.py test
