@@ -10,6 +10,10 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
+
+    env:
+    DJANGO_SECRET_KEY: "django-insecure-ci-only-temp-key-1234567890"
+
     strategy:
       max-parallel: 4
       matrix:
