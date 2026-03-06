@@ -194,3 +194,12 @@ python manage.py runserver
 ![6_3](images/6_3.png)
 
 ![6_4](images/6_4.png)
+
+### 7️⃣ 회원가입 / 로그인 기능 구현
+![login](images/login.png)
+
+![login_2](images/login_2.png)
+
+![login_3](images/login_3.png)
+
+![signup](images/signup.png)
