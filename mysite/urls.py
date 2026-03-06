@@ -7,7 +7,8 @@ from django.conf.urls.static import static
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("todo/", include("todo.urls")),
-    path("", lambda request: redirect("todo:list")),
+    path("", include("accounts.urls")),
+    path("", lambda request: redirect("page-login")),
 ]
 
 if settings.DEBUG:

@@ -22,6 +22,7 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
 <script>
 document.addEventListener("DOMContentLoaded", () => {
   // HTML 문서가 모두 로드된 후 실행되는 코드
@@ -29,79 +30,102 @@ document.addEventListener("DOMContentLoaded", () => {
   const todoId = "{{ todo.id }}";
   // Django 템플릿에서 전달된 todo의 id(pk)를 JavaScript 변수에 저장
 
+  const LOGIN_PAGE_URL = "/login/";
+
+  const LIST_PAGE_URL  = "/todo/list/";
+
+
+  // CSRF Token 가져오는 함수
+  // Django의 POST/PUT/PATCH/DELETE 요청 시 필요
+
+  function getCookie(name) {
+    // 브라우저 쿠키 문자열 가져오기
+    const value = `; ${document.cookie}`;
+
+    // 원하는 쿠키 이름을 기준으로 분리
+    const parts = value.split(`; ${name}=`);
+
+    // 쿠키가 존재하면 값 반환
+    if (parts.length === 2) return parts.pop().split(";").shift();
+
+    return null;
+  }
+
   // axios 인스턴스 생성
   const api = axios.create({
     baseURL: "/",
-    headers: {
-      "Content-Type": "application/json"
-    }
+    withCredentials: true,
   });
 
-  // CSRF 토큰 가져오는 함수
-  function getCookie(name) {
-    const value = document.cookie
-      .split("; ")
-      .find(row => row.startsWith(name + "="));
-    return value ? decodeURIComponent(value.split("=")[1]) : null;
-  }
+  // Axios 요청 인터셉터: CSRF 헤더 자동 주입
+  // (fetch에서 headers로 X-CSRFToken 넣던 것과 동일 목적)
 
-  const csrftoken = getCookie("csrftoken");
-  // csrftoken 쿠키에서 CSRF 토큰 추출
+  api.interceptors.request.use((config) => {
+    const csrf = getCookie("csrftoken");
 
-  // axios 기본 헤더에 CSRF 토큰 설정
-  api.defaults.headers.common["X-CSRFToken"] = csrftoken;
-  api.defaults.headers.common["X-Requested-With"] = "XMLHttpRequest";
-  // Django는 DELETE / POST / PUT 요청 시 CSRF 토큰을 요구하기 때문에
-  // axios 요청 헤더에 X-CSRFToken을 추가해야 403 오류가 발생하지 않음
+    config.headers = config.headers || {};
+    if (csrf) {
+      config.headers["X-CSRFToken"] = csrf;
+    }
+    return config;
+  });
 
-  // 수정 버튼
-  const updateBtn = document.querySelector(".todoUpdate");
-
-  updateBtn.addEventListener("click", () => {
+  // -----------------------------
+  // 수정 버튼 클릭 이벤트
+  // -----------------------------
+  document.querySelector(".todoUpdate").addEventListener("click", () => {
+    // 수정 페이지로 이동
     window.location.href = `/todo/update/${todoId}/`;
   });
 
-  // 삭제 버튼
-  const deleteBtn = document.querySelector(".todoDelete");
 
-  deleteBtn.addEventListener("click", async () => {
+  // -----------------------------
+  // 삭제 버튼 클릭 이벤트 (fetch → axios로만 변경)
+  // - 동작은 동일: confirm → DELETE 요청 → 401/403 로그인 이동 → 성공 시 리스트 이동
+  // -----------------------------
+  document.querySelector(".todoDelete").addEventListener("click", async () => {
 
+    // 삭제 확인 메시지
     const ok = confirm("정말 삭제하시겠습니까?");
-
     if (!ok) return;
 
     try {
-
+      // axios DELETE 요청
+      // axios: api.delete(`/todo/viewsets/view/${todoId}/`)
       const res = await api.delete(`/todo/viewsets/view/${todoId}/`);
-      // axios를 사용하여 DELETE 요청 전송
-      // 기존 fetch DELETE 요청과 동일한 기능
 
-      console.log(res.data);
-      // 서버 응답 데이터 확인 (DELETE는 보통 데이터 없음)
+      // axios는 2xx일 때만 여기로 들어오며, 응답 데이터는 res.data
+      // (삭제 응답이 body 없이 와도 문제 없음)
 
-      // 삭제 성공 후 목록 페이지로 이동
-      window.location.href = "/todo/list/";
+      // 삭제 성공 → Todo 목록 페이지로 이동
+      window.location.href = LIST_PAGE_URL;
 
     } catch (err) {
-      console.error(err.response?.data || err.message);
-      // 삭제 중 오류 발생 시 콘솔 출력
 
+      // axios는 4xx/5xx면 catch로 들어옴
+      const status = err.response?.status;
+
+      // 로그인 세션이 없거나 권한이 없는 경우 (fetch의 res.status 체크와 동일)
+      if (status === 401 || status === 403) {
+        alert("로그인이 필요합니다.");
+        window.location.href = LOGIN_PAGE_URL;
+        return;
+      }
+
+      // 그 외 오류 처리
+      console.error(err);
       alert("삭제 중 오류가 발생했습니다.");
-      // 사용자에게 오류 메시지 표시
     }
   });
-  // 삭제 기능 끝
 
-  // 홈으로 버튼
-  const homeBtn = document.querySelector(".todoHome");
-  // class가 todoHome인 버튼 선택
 
-  homeBtn.addEventListener("click", () => {
-    // 홈 버튼 클릭 시 실행
-    window.location.href = "/todo/list/";
+  // -----------------------------
+  // 홈으로 버튼 클릭 이벤트
+  // -----------------------------
+  document.querySelector(".todoHome").addEventListener("click", () => {
     // Todo 목록 페이지로 이동
+    window.location.href = LIST_PAGE_URL;
   });
-  // 홈 버튼 기능 끝
 
 });
 </script>

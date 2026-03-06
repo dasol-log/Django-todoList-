@@ -1,4 +1,5 @@
 from django.test import TestCase
+from django.contrib.auth.models import User
 from rest_framework.test import APIClient
 
 from ..models import Todo
@@ -11,13 +12,21 @@ class TodoAPITests(TestCase):
 
     def setUp(self):
         self.client = APIClient()
-        self.base_url = "/todo/viewsets/view/"  # ViewSet 경로로 통일
+        self.base_url = "/todo/viewsets/view/"
 
+        # 테스트용 유저 생성 + 인증
+        self.user = User.objects.create_user(
+            username="testuser", password="testpass123"
+        )
+        self.client.force_authenticate(user=self.user)
+
+        # user 필드 추가
         self.todo = Todo.objects.create(
             name="운동",
             description="스쿼트 50회",
             complete=False,
             exp=10,
+            user=self.user,
         )
 
     # -----------------------------------------------------
