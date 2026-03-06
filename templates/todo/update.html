@@ -25,6 +25,25 @@
     <input type="number" name="exp" id="exp" min="0" value="{{ todo.exp }}">
   </div>
 
+  <div>
+    <label>Current Image:</label><br>
+    {% if todo.image %}
+    <img src="{{ todo.image.url }}" alt="todo image" style="max-width:250px; height:auto;">
+    <br>
+    <!-- ✅ 이미지 삭제 체크박스 추가 -->
+    <label>
+      <input type="checkbox" id="deleteImage"> 이미지 삭제
+    </label>
+    {% else %}
+      <p>-</p>
+    {% endif %}
+  </div>
+
+  <div>
+    <label for="image">New Image:</label>
+    <input type="file" id="image">
+  </div>
+
   <button type="button" id="todoUpdate">저장</button>
   <button type="button" onclick="history.back()">취소</button>
 </div>
@@ -79,6 +98,20 @@ document.getElementById("todoUpdate").addEventListener("click", async () => {
 
     formData.append("exp", document.getElementById("exp").value || 0);
     // exp 입력값 추가 (값이 없으면 0으로 설정)
+
+    const fileInput = document.getElementById("image");
+    // 이미지 input 요소 가져오기
+
+    if (fileInput.files.length > 0) {
+      formData.append("image", fileInput.files[0]);
+    }
+    // 새 이미지를 선택했을 경우에만 image 필드를 추가
+    // (이미지를 변경하지 않으면 서버로 보내지 않음)
+
+    const deleteCheckbox = document.getElementById("deleteImage");
+    if (deleteCheckbox && deleteCheckbox.checked) {
+      formData.append("image", "");  // 빈 값을 보내면 서버에서 이미지 제거
+    }
 
     const res = await api.patch(`/todo/viewsets/view/${todoId}/`, formData);
     // PATCH 요청으로 Todo 데이터 수정 API 호출

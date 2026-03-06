@@ -183,3 +183,12 @@ python manage.py runserver
 
 ### 5️⃣ Pagination 추가
 ![pagination](images/pagination.png)
+
+### 6️⃣ 이미지 업로드 기능 추가
+![6_1](images/6_1.png)
+
+![6_2](images/6_2.png)
+
+![6_3](images/6_3.png)
+
+![6_4](images/6_4.png)
